@@ -1,5 +1,6 @@
 package az.kitabevim.pages;
 
+import az.kitabevim.logs.LoggerFile;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -44,7 +45,8 @@ public class SearchResultsPage extends ExceptionHandler { //To reuse exceptions 
             wait.until(ExpectedConditions.visibilityOf(booksList.get(book)));
             clickOnElement(wait, booksList.get(book)); //get(1) to check non-available book
         } else {
-            System.out.println("0 books were found");
+            LoggerFile.warn("0 books were found");
+            //System.out.println("0 books were found");
         }
     }
 }

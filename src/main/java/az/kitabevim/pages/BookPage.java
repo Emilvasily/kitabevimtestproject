@@ -1,5 +1,6 @@
 package az.kitabevim.pages;
 
+import az.kitabevim.logs.LoggerFile;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -48,7 +49,8 @@ public class BookPage extends ExceptionHandler { //To reuse exceptions handling 
             clickOnElement(wait, addBookToBasketBtn);
             return true;
         } else {
-            System.out.println("Book is not available");
+            LoggerFile.warn("Book is not available");
+            //System.out.println("Book is not available");
             return false;
         }
     }

@@ -2,14 +2,13 @@ package az.kitabevimTests;
 
 import az.kitabevim.csvReader.CSVProcessing;
 import az.kitabevim.drivers.DriverFactoryChrome;
+import az.kitabevim.logs.LoggerFile;
 import az.kitabevim.pages.BasketPage;
 import az.kitabevim.pages.BookPage;
 import az.kitabevim.pages.HomePage;
 import az.kitabevim.pages.SearchResultsPage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -25,10 +24,10 @@ public class TestScope {
 
     private final CSVProcessing csvProcessing = new CSVProcessing();
     private String keyword;
-    private static Logger log = Logger.getLogger(TestScope.class);
 
     @BeforeTest
     public void parsKeyword(){
+        LoggerFile.info("Parsing CSV");
         keyword = csvProcessing.getSearchValue();
     }
 
@@ -39,7 +38,8 @@ public class TestScope {
 
     @Test
     public void addBookToBasketThenDeleteIt(){
-        PropertyConfigurator.configure("src/main/java/az/kitabevim/logs/log4j.properties");
+
+        LoggerFile.info("Initializing things");
         WebDriver driver = DriverFactoryChrome.getDriver();
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
@@ -48,8 +48,9 @@ public class TestScope {
         BookPage bookPage = new BookPage(driver, wait);
         BasketPage basketPage = new BasketPage(driver, wait);
 
+        LoggerFile.info("Navigate to https://www.kitabevim.az and execute test. " +
+                "Any additional information on execution will be added on methods implementation level");
         driver.get("https://www.kitabevim.az");
-        log.info("go to URL");
         driver.manage().window().maximize();
         //Confirm page title
         Assert.assertTrue(driver.getTitle().contains("Kitabevim.az e-mağaza"));
@@ -63,7 +64,10 @@ public class TestScope {
         //Confirm that book page is available by checking status
         Assert.assertTrue(bookPage.getBookAvailabilityText().contains("ANBARDA"));
         //Confirm that book is available or skip test
-        if(!bookPage.addBookToBasket()) throw new SkipException("Book is not available");
+        if(!bookPage.addBookToBasket()) {
+            LoggerFile.warn("Book is not available. Skipping test");
+            throw new SkipException("Book is not available. Skipping test");
+        }
         //Confirm that item count is increased by 1
         Assert.assertTrue(bookPage.itemsCountChecked());
         //Hover on basket then click goTo
@@ -78,13 +82,14 @@ public class TestScope {
         basketPage.removeItem();
         //Confirm that basket is empty
         Assert.assertTrue(basketPage.getEmptyBasketText().contains("Səbətiniz hazırda boşdur"));
-        log.info("Finish");
+        LoggerFile.info("Test is finished. You can find result-artifacts in Allure folder");
     }
 
     @AfterMethod
     public void quitDriver(){
         WebDriver driver = DriverFactoryChrome.getDriver();
         driver.quit();
+        LoggerFile.info("Closing driver");
     }
 
 }

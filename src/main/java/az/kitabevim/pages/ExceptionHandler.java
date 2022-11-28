@@ -1,5 +1,6 @@
 package az.kitabevim.pages;
 
+import az.kitabevim.logs.LoggerFile;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
@@ -19,10 +20,12 @@ public class ExceptionHandler {
                 webElement.click();
                 break;
             } catch (StaleElementReferenceException | TimeoutException | NoSuchElementException exception) {
-                System.out.println("Another try because of: " + webElement + "\n" + Arrays.toString(exception.getStackTrace()));
+                LoggerFile.warn("Another try because of: " + webElement + "\n" + Arrays.toString(exception.getStackTrace()));
+                //System.out.println("Another try because of: " + webElement + "\n" + Arrays.toString(exception.getStackTrace()));
             }
         }
-        System.out.println("Failed to locate element: " + webElement);
+        LoggerFile.error("Failed to locate element: " + webElement);
+        //System.out.println("Failed to locate element: " + webElement);
     }
 
     public String getElementsText(WebDriverWait webDriverWait, WebElement webElement) {
@@ -32,9 +35,11 @@ public class ExceptionHandler {
                 webDriverWait.until(ExpectedConditions.visibilityOf(webElement));
                 return webElement.getText();
             } catch (StaleElementReferenceException | TimeoutException | NoSuchElementException exception) {
-                System.out.println("Another try because of: " + webElement + "\n" + Arrays.toString(exception.getStackTrace()));
+                LoggerFile.warn("Another try because of: " + webElement + "\n" + Arrays.toString(exception.getStackTrace()));
+                //System.out.println("Another try because of: " + webElement + "\n" + Arrays.toString(exception.getStackTrace()));
             }
         }
+        LoggerFile.error("Failed to locate element");
         return "Failed to locate element";
     }
 }
