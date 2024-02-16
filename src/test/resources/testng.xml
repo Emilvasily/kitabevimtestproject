@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="KitabEvimUITest" verbose="1">
+    <test name="KitabEvimChromeTest">
+        <classes>
+            <class name="az.kitabevim.Tests.TestScope">
+                <methods>
+                    <include name="addBookToBasketThenDeleteIt"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
